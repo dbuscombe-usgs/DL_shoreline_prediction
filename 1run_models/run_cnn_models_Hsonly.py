@@ -31,18 +31,12 @@ os.chdir(abs_path)
 
 ##Import Observed Shoreline positions
 mat_in= pd.read_csv('../data/inputs_target.csv')  
-
 obs_shoreline = mat_in[['Datetime', 'yout']]
-
-
 mat_in['Datetime'] = pd.to_datetime(mat_in['Datetime'])
 mat_in = mat_in.set_index(['Datetime'])
 mat_out= pd.DataFrame(mat_in.yout.values, index=mat_in.index)
-
-
 ## just waves
 mat_in = mat_in[['Hs','yout']]
-
 
 
 # Import SPADS 

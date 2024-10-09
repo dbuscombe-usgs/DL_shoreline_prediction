@@ -11,17 +11,29 @@ import pandas as pd
 import numpy as np
 
 def normal_data(df,date):
-    """
-    Normalize dataframe values to range [-1,1]
-    """
-    #x= df.values
-    scaler = preprocessing.MinMaxScaler(feature_range=(0, 1)) 
-    #Here we fit the scaler 
-    scaler= scaler.fit(df[df.index[0]:date])
-    #Here we transform the data
-    x_scaled = scaler.transform(df)
-    df = pd.DataFrame(x_scaled,index=df.index, columns=df.columns)
-    return scaler,df
+     """
+     Normalize dataframe values to range [-1,1]
+     """
+     #x= df.values
+     scaler = preprocessing.MinMaxScaler(feature_range=(0, 1)) 
+     #Here we fit the scaler 
+
+     try:
+          scaler= scaler.fit(df[df.index[0]:date])
+          #Here we transform the data
+          x_scaled = scaler.transform(df)
+          df = pd.DataFrame(x_scaled,index=df.index, columns=df.columns)
+
+     except:
+          index = df.index
+          scaler= scaler.fit(df[df.index[0]:date].values.reshape(-1, 1))
+          #Here we transform the data
+          x_scaled = scaler.transform(df.values.reshape(-1, 1))
+          df = pd.DataFrame(x_scaled, columns = ['Hs'])
+          df['Datetime'] = index
+          df.set_index('Datetime', inplace=True)
+
+     return scaler,df
 
 
 #From pandas to array, HERE WE SEPARATE THE INPUTS FROM THE Y_OUTPUT
@@ -37,8 +49,7 @@ def split_sequences(sequences, n_steps_in, n_steps_out):
         if out_end_ix > len(sequences):
              break
         # gather input and output parts of the pattern
-        seq_x, seq_y = sequences[i:end_ix,
-                                 :-1], sequences[end_ix-1:out_end_ix, -1]
+        seq_x, seq_y = sequences[i:end_ix,:-1], sequences[end_ix-1:out_end_ix, -1]
         X.append(seq_x)
         y.append(seq_y)
      return np.array(X), np.array(y)

@@ -9,7 +9,9 @@ import tensorflow as tf
 from tensorflow.keras import backend as K
 from tensorflow.python.ops import math_ops
 import numpy as np
-#%% Error definitions
+
+
+#Error definitions
 def index_mielke(s, o):
     """
 	index of agreement
@@ -25,6 +27,8 @@ def index_mielke(s, o):
     im= 1 - (((len(o)**-1)*d1)/d2)
     return im
 
+
+@tf.function
 def correlation_coefficient_loss(y_true, y_pred):
     x = y_true
     y = y_pred
@@ -37,6 +41,7 @@ def correlation_coefficient_loss(y_true, y_pred):
     r = K.maximum(K.minimum(r, 1.0), -1.0)
     return 1- K.square(r)
 
+@tf.function
 def mielke_loss(y_true, y_pred):
     """ Mielke index 
     if pearson coefficient (r) is zero or positive use kappa=0

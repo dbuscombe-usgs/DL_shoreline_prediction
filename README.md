@@ -5,6 +5,26 @@ Here you can find the alongshore-averaged cross-shore position time series for T
 To ensure that you have the appropriate requirements to run the Python scripts, please create a Mamba environment using the provided .yaml file ("cnns_4_schange.yaml"). To run the models, run scripts in /1run_models. To generate plots, run scripts in /2gen_plots. 
 
 
+
+Conda recipe:
+
+```
+conda create --name cnnshorelines python=3.10 -y
+conda activate cnnshorelines
+python3 -m pip install nvidia-cudnn-cu11 tensorflow[and-cuda]
+```
+
+check gpus:
+```
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+```
+
+
+```
+conda install scikit-learn numpy scipy matplotlib pandas
+conda install ipython
+```
+
 ## Citation
 
 ```

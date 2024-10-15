@@ -53,7 +53,39 @@ h_tlinux = (pd.to_datetime(H_in['Datetime'])- dt.datetime(1970,1,1)).dt.total_se
 yobs_i = np.interp(h_tlinux,y_tlinux, yobs)
 
 
-mat_in = pd.DataFrame.from_dict({'Datetime': H_in['Datetime'].values, 'Hs': hobs, 'yout': yobs_i })
+
+
+
+T_in= pd.read_csv('../data/shoreshop2_Tp.csv')#$,index_col=False) 
+T_in['Datetime'] = pd.to_datetime(T_in['Datetime'])  
+# shoreline['Datetime'] = pd.to_datetime(shoreline['Datetime'])  
+
+## clip waves to just shoreline obs time period
+mask = (T_in['Datetime'] > '1999-02-16') & (T_in['Datetime'] <= '2018-12-30')
+T_in = T_in.loc[mask]
+
+tobs = T_in.drop(columns=['Datetime']).mean(axis=1)
+
+
+
+
+
+D_in= pd.read_csv('../data/shoreshop2_Dir.csv')#$,index_col=False) 
+D_in['Datetime'] = pd.to_datetime(D_in['Datetime'])  
+# shoreline['Datetime'] = pd.to_datetime(shoreline['Datetime'])  
+
+## clip waves to just shoreline obs time period
+mask = (D_in['Datetime'] > '1999-02-16') & (D_in['Datetime'] <= '2018-12-30')
+D_in = D_in.loc[mask]
+
+dobs = D_in.drop(columns=['Datetime']).mean(axis=1)
+
+
+
+
+
+
+mat_in = pd.DataFrame.from_dict({'Datetime': H_in['Datetime'].values, 'Hs': hobs, 'Dir': dobs, 'Tp': tobs, 'yout': yobs_i })
 mat_in = mat_in.interpolate()
 
 
@@ -203,7 +235,14 @@ for (index, colname) in enumerate(yresults):
 
 yresults["obs"]=testY[:,0]
 
-yresults.to_csv('./output/CNN_ensemble_Hs_only_smallcnn_linearact_shoreshop2.csv')
+
+model.summary()
+###130,737
+
+
+
+
+yresults.to_csv('./output/CNN_ensemble_multivar_smallcnn_linearact_shoreshop2.csv')
 
 
 ## Metrics 
@@ -214,7 +253,7 @@ ymetrics['rmse_arr']=np.array([math.sqrt(mean_squared_error(yresults[colname].va
 ymetrics['pear_arr']=np.array([scipy.stats.pearsonr(yresults[colname].values,testY[:,0])[0] for (index, colname) in enumerate(yresults)])
 ymetrics['mielke_arr']=np.array( [index_mielke(yresults[colname].values,testY[:,0]) for (index, colname) in enumerate(yresults)])
 
-ymetrics.to_csv('./output/CNN_ensemble_Hs_only_smallcnn_linearact_metrics_shoreshop2.csv')
+ymetrics.to_csv('./output/CNN_ensemble_multivar_smallcnn_linearact_metrics_shoreshop2.csv')
 
 
 
@@ -252,7 +291,7 @@ for (index, colname) in enumerate(yresults):
 
 ##EXPORT ENSEMBLE
 yresults["obs"]=testY[:,0]
-yresults.to_csv('./output/CNN_ensemble_Hs_only_smallcnn_shoreshop2.csv')
+yresults.to_csv('./output/CNN_ensemble_multivar_smallcnn_shoreshop2.csv')
 
 
 ## Metrics 
@@ -263,10 +302,11 @@ ymetrics['rmse_arr']=np.array([math.sqrt(mean_squared_error(yresults[colname].va
 ymetrics['pear_arr']=np.array([scipy.stats.pearsonr(yresults[colname].values,testY[:,0])[0] for (index, colname) in enumerate(yresults)])
 ymetrics['mielke_arr']=np.array( [index_mielke(yresults[colname].values,testY[:,0]) for (index, colname) in enumerate(yresults)])
 
-ymetrics.to_csv('./output/CNN_ensemble_Hs_only_smallcnn_metrics_shoreshop2.csv')
+ymetrics.to_csv('./output/CNN_ensemble_multivar_smallcnn_metrics_shoreshop2.csv')
 
 
-
+model.summary()
+###
 
 
 #################################
@@ -302,7 +342,7 @@ for (index, colname) in enumerate(yresults):
 ##EXPORT ENSEMBLE
 #Cut spads and shorefor to match the DL test time series output
 yresults["obs"]=testY[:,0]
-yresults.to_csv('./output/CNN_ensemble_Hs_only_shoreshop2.csv')
+yresults.to_csv('./output/CNN_ensemble_multivar_shoreshop2.csv')
 
 ## Metrics 
 ymetrics= pd.DataFrame(index=np.arange(11),
@@ -312,9 +352,9 @@ ymetrics['rmse_arr']=np.array([math.sqrt(mean_squared_error(yresults[colname].va
 ymetrics['pear_arr']=np.array([scipy.stats.pearsonr(yresults[colname].values,testY[:,0])[0] for (index, colname) in enumerate(yresults)])
 ymetrics['mielke_arr']=np.array( [index_mielke(yresults[colname].values,testY[:,0]) for (index, colname) in enumerate(yresults)])
 
-ymetrics.to_csv('./output/CNN_ensemble_Hs_only_shoreshop2.csv')
+ymetrics.to_csv('./output/CNN_ensemble_multivar_shoreshop2.csv')
 
-
+##3645
 
 
 
@@ -361,7 +401,7 @@ for (index, colname) in enumerate(yresults):
 # yresults["spads"]=mspads[plot_date :mspads.index[-1]]
 # yresults["shorefor"]=mshorefor[plot_date :mshorefor.index[-1]]
 yresults["obs"]=testY[:,0]
-yresults.to_csv('./output/CNN_ensemble_Hs_only_tinycnn_linearact_shoreshop2.csv')
+yresults.to_csv('./output/CNN_ensemble_multivar_tinycnn_linearact_shoreshop2.csv')
 
 ## Metrics 
 ymetrics= pd.DataFrame(index=np.arange(11),
@@ -371,6 +411,6 @@ ymetrics['rmse_arr']=np.array([math.sqrt(mean_squared_error(yresults[colname].va
 ymetrics['pear_arr']=np.array([scipy.stats.pearsonr(yresults[colname].values,testY[:,0])[0] for (index, colname) in enumerate(yresults)])
 ymetrics['mielke_arr']=np.array( [index_mielke(yresults[colname].values,testY[:,0]) for (index, colname) in enumerate(yresults)])
 
-ymetrics.to_csv('./output/CNN_ensemble_Hs_only_tinycnn_linearact_metrics_shoreshop2.csv')
+ymetrics.to_csv('./output/CNN_ensemble_multivar_tinycnn_linearact_metrics_shoreshop2.csv')
 
 

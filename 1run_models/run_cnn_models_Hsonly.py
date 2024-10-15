@@ -18,6 +18,9 @@ import scipy.stats
 from datetime import  timedelta
 from sklearn.metrics import mean_squared_error
 
+from sklearn.metrics import root_mean_squared_error
+
+
 import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.models import Sequential, Model
@@ -361,114 +364,127 @@ ymetrics.to_csv('./output/CNN_ensemble_Hs_only_tinycnn_linearact_metrics.csv')
 
 
 
+# DY = 20 ##m
+# DT = 10 #60 ## days
+# dt=1
+
+# Hbar = np.mean(Hs)
+
+# ## f has a dependence on DY and DT, but DT is the bigger issue
+# f=-DY/DT*(Hs**2-Hbar**2)/Hbar**2 
+
+
+
+
+
+# # [rmse_arr, pear_arr, mielke_arr]
+
+
+# ## orig
+# # [array([5.28654747, 4.81746374, 4.54484399, 5.035124  , 4.6429338 ,
+# #         5.08056904, 4.79975886, 5.13119368, 5.14679263, 5.31831381,
+# #         5.40599112, 4.08270022]),
+# #  array([0.52342875, 0.51516001, 0.59313776, 0.5911111 , 0.54174981,
+# #         0.55438654, 0.58971031, 0.5983465 , 0.61435352, 0.59251514,
+# #         0.3889452 , 0.589024  ]),
+# #  array([0.47076231, 0.46730169, 0.55979772, 0.56013928, 0.53949736,
+# #         0.48423312, 0.51705051, 0.53119333, 0.52458664, 0.50639755,
+# #         0.3211675 , 0.47446585])]
+
+
+# ## small cnn
+# # [array([5.0284801 , 4.54265921, 4.64142554, 4.9562581 , 5.42267986,
+# #         5.02748219, 4.53680854, 5.31341677, 5.29356074, 5.38749618,
+# #         5.40599112, 4.08270022]),
+# #  array([0.56434147, 0.56282703, 0.57781922, 0.56847199, 0.53128283,
+# #         0.55668698, 0.57982327, 0.58558677, 0.58657711, 0.54705919,
+# #         0.3889452 , 0.589024  ]),
+# #  array([0.52688021, 0.5263081 , 0.53670361, 0.5304249 , 0.44932656,
+# #         0.49845979, 0.54495071, 0.5026141 , 0.48003325, 0.46230843,
+# #         0.3211675 , 0.47446585])]
+
+
+# ## small cnn, Hs only
+# # [array([4.9490804 , 5.54975533, 5.13771468, 4.99947114, 5.38310892,
+# #         5.14628617, 5.22175864, 5.44974248, 5.33376058, 5.11242449,
+# #         5.40599112, 4.08270022]),
+# #  array([0.54823454, 0.5286989 , 0.43673656, 0.53566921, 0.53060911,
+# #         0.53606318, 0.52522173, 0.4656413 , 0.52184574, 0.55737193,
+# #         0.3889452 , 0.589024  ]),
+# #  array([0.5368504 , 0.46296324, 0.41700324, 0.53264992, 0.47602617,
+# #         0.50775348, 0.49614406, 0.4287122 , 0.49176108, 0.51517388,
+# #         0.3211675 , 0.47446585])]
+
+
+# ## small cnn, Hs only, linear activation
+# # [array([4.93055546, 5.11297544, 5.07152451, 5.02488309, 5.55940921,
+# #         5.3411357 , 5.00375021, 5.40726326, 5.49269985, 6.12400071,
+# #         5.40599112, 4.08270022]),
+# #  array([0.55795802, 0.53579683, 0.53122378, 0.5528527 , 0.48914874,
+# #         0.53228722, 0.53422582, 0.5028422 , 0.51456321, 0.49979002,
+# #         0.3889452 , 0.589024  ]),
+# #  array([0.5488001 , 0.50135316, 0.50129797, 0.54050004, 0.4479173 ,
+# #         0.47647522, 0.51001532, 0.47035626, 0.45101379, 0.4046119 ,
+# #         0.3211675 , 0.47446585])]
+
+
+# extract = Model(model.inputs, model.layers[-4].output)
+# features = extract.predict(train_x)
+
+
+# plt.plot(train_x[:,0,:], np.mean(features,axis=1))
+
+# np.mean(features,axis=1)
+
+
+# # n_filters, n_kernels, n_drop, n_epochs,n_batch
+# simple_cfg = [2, 4, 0.0, 300, 16]
+
+# model,_ = cnn_custom(train_x, train_y, dev_x, dev_y, simple_cfg) 
+# model.summary()
+
+
+# testdl = model.predict(test_x)     
+# yresults.iloc[:,index]= scaler.inverse_transform(testdl)
+# print('Metrics')
+# print('RMSE:' )
+# print(str(math.sqrt(mean_squared_error(yresults.iloc[:,index].values,
+#                                     testY))))
+# print('Pearson:' )
+# print(str(scipy.stats.pearsonr(yresults.iloc[:,index].values,
+#                             testY[:,0])[0]))
+# print('Mielke:' )    
+# print(str(index_mielke(yresults.iloc[:,index].values,testY[:,0])))
+
+
+
+
+# ##EXPORT ENSEMBLE
+# #Cut spads and shorefor to match the DL test time series output
+# yresults["spads"]=mspads[plot_date :mspads.index[-1]]
+# yresults["shorefor"]=mshorefor[plot_date :mshorefor.index[-1]]
+
+
+
+# #Uncomment to save 
+# yresults.to_csv('./output/CNN_ensemble_Hs_only_tinycnn_linearact.csv')
+
+# ## Metrics 
+# rmse_arr=np.array([math.sqrt(mean_squared_error(yresults[colname].values,testY)) for (index, colname) in enumerate(yresults)])
+# pear_arr=np.array([scipy.stats.pearsonr(yresults[colname].values,testY[:,0])[0] for (index, colname) in enumerate(yresults)])
+# mielke_arr=np.array( [index_mielke(yresults[colname].values,testY[:,0]) for (index, colname) in enumerate(yresults)])
+
+
 # [rmse_arr, pear_arr, mielke_arr]
 
 
-## orig
-# [array([5.28654747, 4.81746374, 4.54484399, 5.035124  , 4.6429338 ,
-#         5.08056904, 4.79975886, 5.13119368, 5.14679263, 5.31831381,
-#         5.40599112, 4.08270022]),
-#  array([0.52342875, 0.51516001, 0.59313776, 0.5911111 , 0.54174981,
-#         0.55438654, 0.58971031, 0.5983465 , 0.61435352, 0.59251514,
-#         0.3889452 , 0.589024  ]),
-#  array([0.47076231, 0.46730169, 0.55979772, 0.56013928, 0.53949736,
-#         0.48423312, 0.51705051, 0.53119333, 0.52458664, 0.50639755,
-#         0.3211675 , 0.47446585])]
-
-
-## small cnn
-# [array([5.0284801 , 4.54265921, 4.64142554, 4.9562581 , 5.42267986,
-#         5.02748219, 4.53680854, 5.31341677, 5.29356074, 5.38749618,
-#         5.40599112, 4.08270022]),
-#  array([0.56434147, 0.56282703, 0.57781922, 0.56847199, 0.53128283,
-#         0.55668698, 0.57982327, 0.58558677, 0.58657711, 0.54705919,
-#         0.3889452 , 0.589024  ]),
-#  array([0.52688021, 0.5263081 , 0.53670361, 0.5304249 , 0.44932656,
-#         0.49845979, 0.54495071, 0.5026141 , 0.48003325, 0.46230843,
-#         0.3211675 , 0.47446585])]
-
-
-## small cnn, Hs only
-# [array([4.9490804 , 5.54975533, 5.13771468, 4.99947114, 5.38310892,
-#         5.14628617, 5.22175864, 5.44974248, 5.33376058, 5.11242449,
-#         5.40599112, 4.08270022]),
-#  array([0.54823454, 0.5286989 , 0.43673656, 0.53566921, 0.53060911,
-#         0.53606318, 0.52522173, 0.4656413 , 0.52184574, 0.55737193,
-#         0.3889452 , 0.589024  ]),
-#  array([0.5368504 , 0.46296324, 0.41700324, 0.53264992, 0.47602617,
-#         0.50775348, 0.49614406, 0.4287122 , 0.49176108, 0.51517388,
-#         0.3211675 , 0.47446585])]
-
-
-## small cnn, Hs only, linear activation
-# [array([4.93055546, 5.11297544, 5.07152451, 5.02488309, 5.55940921,
-#         5.3411357 , 5.00375021, 5.40726326, 5.49269985, 6.12400071,
-#         5.40599112, 4.08270022]),
-#  array([0.55795802, 0.53579683, 0.53122378, 0.5528527 , 0.48914874,
-#         0.53228722, 0.53422582, 0.5028422 , 0.51456321, 0.49979002,
-#         0.3889452 , 0.589024  ]),
-#  array([0.5488001 , 0.50135316, 0.50129797, 0.54050004, 0.4479173 ,
-#         0.47647522, 0.51001532, 0.47035626, 0.45101379, 0.4046119 ,
-#         0.3211675 , 0.47446585])]
-
-
-extract = Model(model.inputs, model.layers[-4].output)
-features = extract.predict(train_x)
-
-
-plt.plot(train_x[:,0,:], np.mean(features,axis=1))
-
-np.mean(features,axis=1)
-
-
-# n_filters, n_kernels, n_drop, n_epochs,n_batch
-simple_cfg = [2, 4, 0.0, 300, 16]
-
-model,_ = cnn_custom(train_x, train_y, dev_x, dev_y, simple_cfg) 
-model.summary()
-
-
-testdl = model.predict(test_x)     
-yresults.iloc[:,index]= scaler.inverse_transform(testdl)
-print('Metrics')
-print('RMSE:' )
-print(str(math.sqrt(mean_squared_error(yresults.iloc[:,index].values,
-                                    testY))))
-print('Pearson:' )
-print(str(scipy.stats.pearsonr(yresults.iloc[:,index].values,
-                            testY[:,0])[0]))
-print('Mielke:' )    
-print(str(index_mielke(yresults.iloc[:,index].values,testY[:,0])))
-
-
-
-
-##EXPORT ENSEMBLE
-#Cut spads and shorefor to match the DL test time series output
-yresults["spads"]=mspads[plot_date :mspads.index[-1]]
-yresults["shorefor"]=mshorefor[plot_date :mshorefor.index[-1]]
-
-
-
-#Uncomment to save 
-yresults.to_csv('./output/CNN_ensemble_Hs_only_tinycnn_linearact.csv')
-
-## Metrics 
-rmse_arr=np.array([math.sqrt(mean_squared_error(yresults[colname].values,testY)) for (index, colname) in enumerate(yresults)])
-pear_arr=np.array([scipy.stats.pearsonr(yresults[colname].values,testY[:,0])[0] for (index, colname) in enumerate(yresults)])
-mielke_arr=np.array( [index_mielke(yresults[colname].values,testY[:,0]) for (index, colname) in enumerate(yresults)])
-
-
-[rmse_arr, pear_arr, mielke_arr]
-
-
-# [array([4.93055546, 5.11297544, 5.07152451, 5.02488309, 5.55940921,
-#         5.3411357 , 5.00375021, 5.40726326, 5.49269985, 6.12400071,
-#         5.40599112, 4.08270022]),
-#  array([0.55795802, 0.53579683, 0.53122378, 0.5528527 , 0.48914874,
-#         0.53228722, 0.53422582, 0.5028422 , 0.51456321, 0.49979002,
-#         0.3889452 , 0.589024  ]),
-#  array([0.5488001 , 0.50135316, 0.50129797, 0.54050004, 0.4479173 ,
-#         0.47647522, 0.51001532, 0.47035626, 0.45101379, 0.4046119 ,
-#         0.3211675 , 0.47446585])]
+# # [array([4.93055546, 5.11297544, 5.07152451, 5.02488309, 5.55940921,
+# #         5.3411357 , 5.00375021, 5.40726326, 5.49269985, 6.12400071,
+# #         5.40599112, 4.08270022]),
+# #  array([0.55795802, 0.53579683, 0.53122378, 0.5528527 , 0.48914874,
+# #         0.53228722, 0.53422582, 0.5028422 , 0.51456321, 0.49979002,
+# #         0.3889452 , 0.589024  ]),
+# #  array([0.5488001 , 0.50135316, 0.50129797, 0.54050004, 0.4479173 ,
+# #         0.47647522, 0.51001532, 0.47035626, 0.45101379, 0.4046119 ,
+# #         0.3211675 , 0.47446585])]
 

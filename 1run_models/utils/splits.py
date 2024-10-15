@@ -4,6 +4,8 @@
 Created on Wed May 24 13:34:14 2023
 
 @author: egom802
+
+modified to use standardscaler by DB
 """
 
 from sklearn import preprocessing
@@ -15,8 +17,10 @@ def normal_data(df,date):
      Normalize dataframe values to range [-1,1]
      """
      #x= df.values
-     scaler = preprocessing.MinMaxScaler(feature_range=(0, 1)) 
+     # scaler = preprocessing.MinMaxScaler(feature_range=(0, 1)) 
      #Here we fit the scaler 
+
+     scaler = preprocessing.StandardScaler() 
 
      try:
           scaler= scaler.fit(df[df.index[0]:date])

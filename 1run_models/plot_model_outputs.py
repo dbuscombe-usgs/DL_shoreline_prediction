@@ -2,6 +2,9 @@
 
 import pandas as pd 
 import matplotlib.pyplot as plt 
+import numpy as np
+
+
 
 
 orig = pd.read_csv('output/CNN_ensemble_orig.csv')

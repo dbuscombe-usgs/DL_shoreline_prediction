@@ -1,9 +1,10 @@
-# On the use of convolutional deep learning to predict shoreline change
+# Are equilibrium shoreline models just convolutions? A proof-of-concept tinyML model
 
-Here you can find the alongshore-averaged cross-shore position time series for Tairua Beach, wave data, and code of the CNNs and CNN-LSTM models to reproduce the results in the paper by [Gomez-de la Pena et al. 2023](https://doi.org/10.5194/esurf-11-1145-2023). Authors: Eduardo Gomez-de la Pena, Giovanni Coco, Colin Whittaker, and Jennifer Montano. The original shoreline and wave data were curated by co-author JM and used in the paper by [Montaño et al. 2021](https://doi.org/10.1029/2020GL090587) . Earlier versions of the shoreline data set can be found at the [Coast and Ocean Collective website](https://coastalhub.science/data) .
+This repo contains a proof of concept univariate CNN-based model for shoreline prediction, to support the manuscript by Vitousek et al "Are equilibrium shoreline models just convolutions?"
 
-To ensure that you have the appropriate requirements to run the Python scripts, please create a Mamba environment using the provided .yaml file ("cnns_4_schange.yaml"). To run the models, run scripts in /1run_models. To generate plots, run scripts in /2gen_plots. 
+It is based on modified codes originally from [Gomez-de la Pena, 2023](https://github.com/eduardogomezdelapena/DL_shoreline_prediction), which used a larger multivariate CNN model, as detailed in [Gomez-de la Pena et al. 2023](https://doi.org/10.5194/esurf-11-1145-2023). 
 
+This model takes in only Hs, and uses only one convolution layer for feature extraction, with the smallest possible architecture, meaning minimum dense neurons in the regression head. This results in models only c. 50 trainable parameters (actually, between 47 and 61, depending on kernel size)
 
 
 Conda recipe:
@@ -25,16 +26,6 @@ conda install scikit-learn numpy scipy matplotlib pandas
 conda install ipython
 ```
 
-## Citation
+How to use:
 
-```
-@article{Gomez-delaPena2023,
-  title={On the use of Convolutional Deep Learning to predict shoreline change},
-  author={Gomez-de la Pena, Eduardo and Coco, Giovanni and Whittaker, Colin and Montano, Jennifer},
-  journal={EGUsphere},
-  volume={2023},
-  pages={1--24},
-  year={2023},
-  DOI = {10.5194/egusphere-2023-958},
-  publisher={Copernicus Publications G{\"o}ttingen, Germany}
-}
+cd to `1run_models` directory, and execute the script `run_cnn_models_Hsonly_OBdata.py`. It cycles through a list of hyperparameters, creating plots and metrics for each model instance. The best model is used to create Figure 6 in the Vitousek et al paper. Models are designed to be trained with a GPU for faster execution, but these codes will also run on a CPU-only version of Tensorflow/keras.
